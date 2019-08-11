@@ -28,7 +28,16 @@ class DQN(nn.Module):
         self.conv4 = nn.Conv2d(self.conv3,hidden,kernel_size=7,strides=1, bias=False)
 
         self.valuestream, self.advantagestream = torch.split(self.conv4, 2, 3)
-        self.valuestream = torch.fla
+        self.valuestream = torch.flatten(self.valuestream)
+        self.advantagestream = torch.flatten(self.advantagestream)
+
+        self.advantage = nn.Linear(self.advantagestream, self.n_actions, False)
+
+        self.value = nn.Linear(self.valuestream, 1, False)
+
+        self.q_values = self.value + self.advantage.sub(torch.mean(self.advantage,dim=1, keepdim=True))
+        self.best_action = torch.argmax(self.q_values, 1)
+
     def forward(self, x):
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
