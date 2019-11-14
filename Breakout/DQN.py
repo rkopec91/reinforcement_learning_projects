@@ -28,22 +28,29 @@ class DQN(nn.Module):
         self.conv3 = nn.Conv2d(64,64, kernel_size=3, stride=1, bias=False)
         self.conv4 = nn.Conv2d(64,hidden,kernel_size=7,stride=1, bias=False)
 
-        self.valuestream, self.advantagestream = torch.split(self.conv4, 2, 3)
-        self.valuestream = torch.flatten(self.valuestream)
-        self.advantagestream = torch.flatten(self.advantagestream)
 
-        self.advantage = nn.Linear(self.advantagestream, self.n_actions, False)
+        self.func1_adv = nn.Linear(in_features=7*7*64, out_features=512)
+        self.func1_val = nn.Linear(in_features=7*7*64, out_features=512)
 
-        self.value = nn.Linear(self.valuestream, 1, False)
+        self.func2_adv = nn.Linear(in_features=512, out_features=n_actions)
+        self.func2_val = nn.Linear(in_features=512, out_features=1)
 
-        self.q_values = self.value + self.advantage.sub(torch.mean(self.advantage,dim=1, keepdim=True))
-        self.best_action = torch.argmax(self.q_values, 1)
+        self.relu = nn.ReLU()
 
     def forward(self, x):
-        x = F.relu(self.conv1(x))
-        x = F.relu(self.conv2(x))
-        x = F.relu(self.conv3(x))
-        x = F.relu(self.conv4(x))
-        return(x)
+        x = self.relu(self.conv1(x))
+        x = self.relu(self.conv2(x))
+        x = self.relu(self.conv3(x))
+        x = self.relu(self.conv4(x))
+        x = x.view(x.size(0), -1)
+
+        adv = self.relu(self.func1_adv(x))
+        val = self.relu(self.func1_val(x))
+
+        adv = self.func2_adv(adv)
+        val = self.func2_val(val).expand(x.size(0), self.n_actions)
+        
+        x = val + adv - adv.mean(1).unsqueeze(1).expand(x.size(0), self.n_actions)
+        return x
 
 dqn = DQN(4)
