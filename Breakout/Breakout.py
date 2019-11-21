@@ -11,12 +11,12 @@ import torchvision as tv
 class Game:
     def __init__(self, env_name='BreakoutDeterministic-v4', steps=10, history_length=4):
         '''
-        env_name: name of the game the agent is playing from gym.  
+        env_name: name of the game the agent is playing from gym.
         BreakoutDeterministic-v4 or BreakoutDeterministic-v3
 
         steps:  the number of steps the agent sill take
 
-        history_length:  Lenght of the history
+        history_length:  Length of the history
         '''
         self.env = gym.make(env_name)
         self.state = None
