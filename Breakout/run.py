@@ -1,8 +1,11 @@
 from Breakout import Game
-import DQN
+from DQN import DQN
 import argparse
 
 def run(model):
+    pass
+
+def learn():
     pass
 
 def train(model_name):
@@ -23,6 +26,8 @@ if __name__ == "__main__":
 
     save_path = "./"
     environment = "BreakoutDeterministic-v4"
+    
+    dqn = DQN(4)
 
     game = Game()
 
