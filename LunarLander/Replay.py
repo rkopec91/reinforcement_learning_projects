@@ -15,10 +15,10 @@ class Replay:
         self.size = max_size
         self.memory_counter = 0
         self.state_mem = np.zeros((self.size, *input_shape), dtype=np.float32)
-        self.new_state_mem = np.zeros((self.mem_size, *input_shape), dtype=np.float32)
-        self.action_mem = np.zeros(self.mem_size, dtype=np.int64)
-        self.reward_mem = np.zeros(self.mem_size, dtype=np.float32)
-        self.term_mem = np.zeros(self.mem_size, dtype=np.uint8)
+        self.new_state_mem = np.zeros((self.size, *input_shape), dtype=np.float32)
+        self.action_mem = np.zeros(self.size, dtype=np.int64)
+        self.reward_mem = np.zeros(self.size, dtype=np.float32)
+        self.term_mem = np.zeros(self.size, dtype=np.bool)
 
     def record_transition(self, state, action, reward, new_state, done):
         """

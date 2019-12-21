@@ -16,8 +16,10 @@ class DDQN(nn.Module):
         self.loss = nn.MSELoss()
         if torch.cuda.is_available():
             self.device = torch.device("cuda:0")
+            print("CUDA")
         else:
             self.device = torch.device('cpu')
+            print("CPU")
 
         self.name = name
         self.to(self.device)
