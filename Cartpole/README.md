@@ -17,9 +17,9 @@ This did not work, as you can see by the plot above, because we were using a non
 
 There are a few reason why this does not work:
 
-*Small updates to Q can have significant changes to the policy.
-*The correlation between the Q and target values.
-*The correlations in the sequence of observations.
+* Small updates to Q can have significant changes to the policy.
+* The correlation between the Q and target values.
+* The correlations in the sequence of observations.
 
 This is a great paper that can help understand these issues and how to overcome them: 
 https://web.stanford.edu/class/psych209/Readings/MnihEtAlHassibis15NatureControlDeepRL.pdf
