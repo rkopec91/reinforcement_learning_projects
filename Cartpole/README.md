@@ -3,9 +3,9 @@
 ## Running the Code
 
 To train and create plot run the following:
-'''
+```
 python Cartpole.py
-'''
+```
 
 This will train on a GPU if one is available.  If not it will train on a CPU.
 
