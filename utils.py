@@ -30,3 +30,20 @@ class RepeatActionAndMaxFrame(gym.wrapper):
         self.frame_buffer[0] = obs
         
         return obs
+    
+class PreprocessFrame(gym.ObservationWrapper):
+    def __init__(self, shape, env=None):
+        super(PreprocessFrame, self).__init__(env)
+        #Update shape to have channel first
+        self.shape = (shape[2], shape[0], shape[1])
+        self.observation_space = gym.spaces.Box(low=0.0, 
+                                                heigh=1.0, 
+                                                shape=self.shape, 
+                                                dtype=np.float32)
+    
+    def observation(self, observation):
+        new_frame = cv2.cvtColor(observation, cv2.COLOR_RGB2GRAY)
+        resized_screen = cv2.resize(new_frame, self.shape[1:], interpolation=cv2.INTER_AREA)
+        new_observation = np.array(resized_screen, dtype=np.int8).reshape(self.shape) / 255.0
+        return new_observation
+        
