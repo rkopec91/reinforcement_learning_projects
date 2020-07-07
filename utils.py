@@ -46,4 +46,24 @@ class PreprocessFrame(gym.ObservationWrapper):
         resized_screen = cv2.resize(new_frame, self.shape[1:], interpolation=cv2.INTER_AREA)
         new_observation = np.array(resized_screen, dtype=np.int8).reshape(self.shape) / 255.0
         return new_observation
+    
+class StackFrames(gym.ObservationWrapper):
+    def __init__(self, env, repeat):
+        super(StackFrames, self).__init__(env)
+        self.observation_space = gym.spaces.Box(
+            env.observation_space.low.repeat(repeat, axis=0),
+            env.observation_space.high.repeat(repeat, axis=0),
+            dtype=np.float64
+        )
+        self.stack = collections.deque(maxlen=repeat)
         
+    def reset(self):
+        self.stack.clear()
+        observation = self.env.reset()
+        for _ in range(self.stack.maxlen):
+            self.stack.append(observation)
+        return np.array(self.stack).reshape(self.observation_space.low.shape)
+    
+    def observation(self, observation):
+        self.stack.append(observation)
+        return np.array(self.stack).reshape(self.observation_space.low.shape)
